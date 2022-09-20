@@ -2,6 +2,9 @@
 const express = require('express');
 const path = require('path');
 const consolaRoutes = require('./routes/consola')
+const palindromeRoutes = require('./routes/palindrome')
+const efeRoutes = require ('./routes/efe')
+
 const bodyParser = require("body-parser")
 
 const app = express();
@@ -11,6 +14,9 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/consola', consolaRoutes);
+app.use('/palindrome', palindromeRoutes);
+app.use('/efe', efeRoutes);
+
 app.use(bodyParser.urlencoded({
     extended:true
 }));
@@ -52,58 +58,6 @@ app.post('/prueba3', (req,res)=>{
     res.send("Recibido");
 })
 
-//tarea 3
-//efe
-app.get('/efe', (req,res)=>{
-    res.sendFile(path.join(__dirname, 'views', 'efeForm.html'))
-})
-
-app.post('/efe', (req,res)=>{
-    console.log(req.body);
-    var inputEfe = String(req.body.inputEfe);
-    var lengthE = inputEfe.length;
-    var fraseEfe = [];
-    var n = 0;
-    for(i=0;i<lengthE;i++){
-        var letra = inputEfe[i];
-        fraseEfe[n] = letra;
-        if (letra == 'a' || letra == 'e'|| letra == 'i' ||letra == 'o' || letra == 'u') {
-            if(inputEfe[i+1]=='f' && inputEfe[i+2]==letra){
-                i+=2;
-            }
-        }
-        n++;
-    }
-    res.send(fraseEfe.join(''));
-})
-
-//palindrome
-app.get('/palindrome', (req,res)=>{
-    res.sendFile(path.join(__dirname, 'views', 'palindromeForm.html'))
-})
-
-app.post('/palindrome', (req,res)=>{
-    console.log(req.body);
-    var inputPal = String(req.body.inputPal);
-    var lengthP = inputPal.length;
-    var palindrome = true;
-
-    for(i=0;i<lengthP/2;i++){
-        if(inputPal[i] != inputPal[lengthP-i-1]){
-            //console.log(inputPal[i] +' '+ inputPal[lengthP-i-1])
-            palindrome = false;
-            break;
-        } else {
-            //console.log(inputPal[i] +' '+ inputPal[lengthP-i-1])
-        }
-    }
-    if(palindrome==true){
-        res.send("palíndromo")
-    } else {
-        res.send("no es palíndromo")
-    }
-    
-})
 
 //Lanazar app
 app.listen(8080, ()=> {  //puerto donde se lanza la app
